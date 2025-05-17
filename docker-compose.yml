@@ -1,0 +1,33 @@
+version: '3.8'
+
+services: 
+  mysql:
+    image: mysql:5.7
+    command:
+      - "--innodb_use_native_aio=0"
+      - "--default-authentication-plugin=mysql_native_password"
+      - "--skip-ssl"
+    environment:
+      MYSQL_ROOT_PASSWORD: root
+    volumes:
+      - ./bbdd:/var/lib/mysql
+
+  phpmyadmin:
+    image: phpmyadmin/phpmyadmin
+    environment:
+      PMA_HOST: mysql
+    ports:
+      - 8000:80
+    depends_on:
+      - mysql
+
+  jboss:
+    container_name: jboss
+    #image: quay.io/wildfly/wildfly:26.1.2.Final-jdk17
+    build: jboss/
+    ports:
+      - 8080:8080
+      - 9990:9990
+
+
+
